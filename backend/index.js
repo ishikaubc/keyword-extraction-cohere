@@ -2,9 +2,10 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { CohereClient } from "cohere-ai";
-
+import dotenv from "dotenv";
+dotenv.config();
 const cohere = new CohereClient({
-  token: "MGZcYg81CW3lCcr7JptECr8YC6TVQsmDN3lFyUAS", // Replace with your actual API key
+  token: process.env.COHERE_API_KEY,
 });
 
 const app = express();
