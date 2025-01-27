@@ -16,6 +16,41 @@ const App = () => {
       console.error("Error extracting keywords:", error);
     }
   };
+  const downloadKeywords = () => {
+    const element = document.createElement("a");
+    const file = new Blob([keywords.join(", ")], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = "keywords.txt";
+    document.body.appendChild(element);
+    element.click();
+  };
+  const getHighlightedText = (text, keywords) => {
+    if (!keywords || keywords.length === 0) return text;
+
+    const regex = new RegExp(`\\b(${keywords.join("|")})\\b`, "gi");
+    const parts = text.split(regex);
+
+    return parts.map((part, index) =>
+      keywords.includes(part) ? (
+        <span
+          key={index}
+          style={{
+            backgroundColor: "#FFD700", // Gold background
+            color: "#000", // Black text
+            fontWeight: "bold",
+            padding: "0.2rem",
+            borderRadius: "5px",
+            margin: "0 0.2rem",
+            display: "inline-block",
+          }}
+        >
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
 
   return (
     <div style={{ textAlign: "center", padding: "2rem" }}>
@@ -35,18 +70,32 @@ const App = () => {
       >
         Extract Keywords
       </button>
+      <button
+        onClick={downloadKeywords}
+        style={{ padding: "0.5rem 1rem", marginTop: "1rem", fontSize: "1rem" }}
+      >
+        Download Keywords
+      </button>
+
       <div style={{ marginTop: "2rem" }}>
         <h3>Extracted Keywords:</h3>
         <ul>
-          {keywords && keywords.length > 0 ? (
-            keywords.map((keyword, index) => <li key={index}>{keyword}</li>)
-          ) : (
-            <p>No keywords extracted yet.</p>
-          )}
+          {keywords.map((keyword, index) => (
+            <li key={index}>{keyword}</li>
+          ))}
         </ul>
+      </div>
+
+      <div style={{ marginTop: "2rem" }}>
+        <h3>Highlighted Text:</h3>
+        <p style={{ whiteSpace: "pre-wrap" }}>
+          {getHighlightedText(text, keywords)}
+        </p>
       </div>
     </div>
   );
 };
 
 export default App;
+
+
