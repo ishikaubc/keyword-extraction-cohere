@@ -31,7 +31,6 @@ app.post("/extract-keywords", async (req, res) => {
 
     console.log("Raw Response:", response);
 
-    // Check if generations exist in the response
     if (
       response.generations &&
       Array.isArray(response.generations) &&
@@ -39,9 +38,9 @@ app.post("/extract-keywords", async (req, res) => {
     ) {
       const rawText = response.generations[0].text.trim();
       const keywords = rawText
-        .split("\n") // Split by lines
-        .map(line => line.replace(/^-/, "").trim()) // Remove dashes and trim spaces
-        .filter(Boolean); // Remove empty lines
+        .split("\n")
+        .map(line => line.replace(/^-/, "").trim()) 
+        .filter(Boolean);
 
       console.log("Extracted Keywords:", keywords);
       res.json({ keywords });
